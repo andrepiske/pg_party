@@ -14,7 +14,7 @@ module PgParty
       @caching = true
       @caching_ttl = -1
       @schema_exclude_partitions = true
-      @create_template_tables = true
+      @create_template_tables = false
       @create_with_primary_key = false
       @include_subpartitions_in_partition_list = false
     end

@@ -375,7 +375,9 @@ module PgParty
     end
 
     def validate_primary_key(key)
-      raise ArgumentError, "composite primary key not supported" if key.is_a?(Array)
+      # disable this check for the purpose of showing the problem.
+      #
+      # raise ArgumentError, "composite primary key not supported" if key.is_a?(Array)
     end
 
     def quote_partition_key(key)

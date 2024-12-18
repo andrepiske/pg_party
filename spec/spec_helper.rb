@@ -4,7 +4,7 @@ ENV["RAILS_ENV"] ||= "test"
 
 require "combustion"
 require "timecop"
-require "pry-byebug"
+require "debug"
 require "simplecov"
 require "rake"
 
@@ -36,6 +36,9 @@ require "support/heredoc_matcher"
 require "support/pg_dump_helper"
 
 static_time = Date.current + 12.hours
+
+# require 'pg'
+puts "Debug: pg version=#{PG::VERSION}"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

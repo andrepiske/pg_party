@@ -4,7 +4,7 @@ ENV["RAILS_ENV"] ||= "test"
 
 require "combustion"
 require "timecop"
-require "pry-byebug"
+require "debug"
 require "simplecov"
 require "rake"
 

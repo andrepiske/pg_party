@@ -23,7 +23,7 @@ ActiveRecord::Schema.define do
     end_range: Date.tomorrow + 1
 
   create_range_partition :bigint_timestamp_ranges, partition_key: :created_at do |t|
-    t.timestamps null: false
+    t.timestamps null: false, precision: 6
   end
 
   time_now = Time.now.utc

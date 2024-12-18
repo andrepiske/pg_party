@@ -1,0 +1,62 @@
+name: test
+on:
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Ruby ${{ matrix.ruby }}, ${{ matrix.gemfile }}.gemfile, PG ${{ matrix.postgres }}
+    runs-on: ubuntu-latest
+    services:
+      test-postgres:
+        image: docker.io/postgres:${{ matrix.postgres }}
+        ports:
+        - 5432:5432
+        env:
+          POSTGRES_PASSWORD: foobar123
+    strategy:
+      matrix:
+        include:
+        # old
+        - { gemfile: 'ar_7.1', ruby: '3.3', postgres: '15' }
+        - { gemfile: 'ar_7.1', ruby: '3.3', postgres: '16' }
+        # current
+        - { gemfile: 'ar_7.2', ruby: '3.3', postgres: '16' }
+        - { gemfile: 'ar_7.2', ruby: '3.3', postgres: '17' }
+        # modern
+        - { gemfile: 'ar_8.0', ruby: '3.3', postgres: '16' }
+        - { gemfile: 'ar_8.0', ruby: '3.3', postgres: '17' }
+    continue-on-error: true
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+    - name: Setup ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+      env:
+        BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
+    - name: Create database
+      run: |
+        createdb \
+          --host=$POSTGRES_HOST \
+          --port=$POSTGRES_PORT \
+          --username=postgres \
+          pg_party_test
+      env:
+        PGPASSWORD: foobar123
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+    - name: Run specs
+      run:
+        bundle exec rspec spec/integration/model/bigint_timestamp_range_spec.rb
+      env:
+        BACKTRACE: 1
+        BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile

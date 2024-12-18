@@ -37,6 +37,9 @@ require "support/pg_dump_helper"
 
 static_time = Date.current + 12.hours
 
+# require 'pg'
+puts "Debug: pg version=#{PG::VERSION}"
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"

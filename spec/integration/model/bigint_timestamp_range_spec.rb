@@ -11,7 +11,9 @@ RSpec.describe BigintTimestampRange do
   around(:each) do |example|
     # This class is sensitive to time but spec_helper freezes it to a
     # fixed hour. Let's undo that for the specs here.
-    Timecop.freeze(Time.now_without_mock_time) do
+    # Also, let's reduce precision to millisecond.
+    t = Time.at(Time.now_without_mock_time.to_i)
+    Timecop.freeze(t) do
       example.run
     end
   end
